@@ -1,10 +1,12 @@
 package com.devaon.managecontact.repository;
 
 import com.devaon.managecontact.domain.Person;
+import com.devaon.managecontact.domain.dto.Birthday;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,45 +20,33 @@ class PersonRepositoryTest {
     private PersonRepository personRepository;
 
     @Test
-    public void crud(){
-        Person person = Person.builder()
-                .name("최예원")
-                .age(24)
-                .bloodType("B")
-                .build();
-
-        personRepository.save(person);
-
-        List<Person> people = personRepository.findAll();
-
+    void findByName() {
+        List<Person> people = personRepository.findByName("tony");
         assertThat(people.size()).isEqualTo(1);
-        assertThat(people.get(0).getName()).isEqualTo("최예원");
-        assertThat(people.get(0).getAge()).isEqualTo(24);
-        assertThat(people.get(0).getBloodType()).isEqualTo("B");
+
+        Person person = people.get(0);
+        assertAll(
+                () -> assertThat(person.getName()).isEqualTo("tony"),
+                () -> assertThat(person.getHobby()).isEqualTo("reading"),
+                () -> assertThat(person.getAddress()).isEqualTo("seoul"),
+                () -> assertThat(person.getBirthday()).isEqualTo(Birthday.of(LocalDate.of(1991, 7, 10))),
+                () -> assertThat(person.getJob()).isEqualTo("officer"),
+                () -> assertThat(person.getPhoneNumber()).isEqualTo("010-2222-5555"),
+                () -> assertThat(person.isDeleted()).isEqualTo(false)
+        );
     }
 
     @Test
-    public void hashCodeEquals(){
-        Person person1 = Person.builder()
-                .name("최예원")
-                .age(24)
-                .bloodType("B")
-                .build();
-        Person person2 = Person.builder()
-                .name("최예원")
-                .age(24)
-                .bloodType("B")
-                .build();
+    void findByMonthOfBirthday(){
+        List<Person> people = personRepository.findByMonthOfBirthday(8);
 
-        System.out.println(person1.equals(person2));
-        System.out.println(person1.hashCode());
-        System.out.println(person2.hashCode());
-
-        Map<Person, Integer> map = new HashMap<>();
-        map.put(person1, person1.getAge());
-
-        System.out.println(map);
-        System.out.println(map.get(person2));
+        assertThat(people.size()).isEqualTo(2);
+        assertAll(
+                () -> assertThat(people.get(0).getName()).isEqualTo("martin"),
+                () -> assertThat(people.get(1).getName()).isEqualTo("sophia")
+        );
     }
+
+
 
 }
