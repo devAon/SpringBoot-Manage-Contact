@@ -59,7 +59,7 @@ class PersonControllerTest {
 
     @Test
     void postPerson() throws Exception {
-        PersonDto dto = PersonDto.of("martin", "programming", "판교", LocalDate.now(), "programmer", "010-1111-2222");
+        PersonDto dto = PersonDto.of("martin", "programming", "seoul", LocalDate.now(), "programmer", "010-1111-2222");
 
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/person")
@@ -72,7 +72,29 @@ class PersonControllerTest {
         assertAll(
                 () -> assertThat(result.getName()).isEqualTo("martin"),
                 () -> assertThat(result.getHobby()).isEqualTo("programming"),
-                () -> assertThat(result.getAddress()).isEqualTo("판교"),
+                () -> assertThat(result.getAddress()).isEqualTo("seoul"),
+                () -> assertThat(result.getBirthday()).isEqualTo(Birthday.of(LocalDate.now())),
+                () -> assertThat(result.getJob()).isEqualTo("programmer"),
+                () -> assertThat(result.getPhoneNumber()).isEqualTo("010-1111-2222")
+        );
+    }
+
+    @Test
+    void allModifyPerson() throws  Exception{
+        PersonDto dto = PersonDto.of("martin", "programming", "seoul", LocalDate.now(), "programmer", "010-1111-2222");
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/api/person/1")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(toJsonString(dto)))
+                .andExpect(status().isOk());
+
+        Person result = personRepository.findById(1L).get();
+
+        assertAll(
+                () -> assertThat(result.getName()).isEqualTo("martin"),
+                () -> assertThat(result.getHobby()).isEqualTo("programming"),
+                () -> assertThat(result.getAddress()).isEqualTo("seoul"),
                 () -> assertThat(result.getBirthday()).isEqualTo(Birthday.of(LocalDate.now())),
                 () -> assertThat(result.getJob()).isEqualTo("programmer"),
                 () -> assertThat(result.getPhoneNumber()).isEqualTo("010-1111-2222")
@@ -83,6 +105,8 @@ class PersonControllerTest {
     private String toJsonString(PersonDto personDto) throws JsonProcessingException {
         return objectMapper.writeValueAsString(personDto);
     }
+
+
 
 
 }
