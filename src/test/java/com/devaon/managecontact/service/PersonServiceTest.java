@@ -4,9 +4,15 @@ import com.devaon.managecontact.controller.dto.PersonDto;
 import com.devaon.managecontact.domain.Person;
 import com.devaon.managecontact.exception.PersonNotFoundException;
 import com.devaon.managecontact.repository.PersonRepository;
+import com.devaon.managecontact.service.argumentmatcher.IsNameWillBeUpdated;
+import com.devaon.managecontact.service.argumentmatcher.IsPersonWillBeDeleted;
+import com.devaon.managecontact.service.argumentmatcher.IsPersonWillBeInserted;
+import com.devaon.managecontact.service.argumentmatcher.IsPersonWillBeUpdated;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
@@ -16,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class PersonServiceTest {
     @InjectMocks
     private PersonService personService;
@@ -43,13 +49,13 @@ class PersonServiceTest {
     }
 
     @Test
-    void allModifyPerson() throws Exception {
+    void modify() {
         when(personRepository.findById(1L))
                 .thenReturn(Optional.of(new Person("martin")));
 
         personService.modify(1L, mockPersonDto());
 
-        verify(personRepository, times(1)).save(argThat(new IsPersonWillBeInserted()));
+        verify(personRepository, times(1)).save(argThat(new IsPersonWillBeUpdated()));
     }
 
 
@@ -59,6 +65,26 @@ class PersonServiceTest {
                 .thenReturn(Optional.empty());
 
         assertThrows(PersonNotFoundException.class, () -> personService.modify(1L, "daniel"));
+    }
+
+    @Test
+    void modifyByName(){
+        when(personRepository.findById(1L))
+                .thenReturn(Optional.of(new Person("martin")));
+
+        personService.modify(1L, "daniel");
+
+        verify(personRepository, times(1)).save(argThat(new IsNameWillBeUpdated()));
+    }
+
+    @Test
+    void delete(){
+        when(personRepository.findById(1L))
+                .thenReturn(Optional.of(new Person("martin")));
+
+        personService.delete(1L);
+
+        verify(personRepository, times(1)).save(argThat(new IsPersonWillBeDeleted()));
     }
 
     private PersonDto mockPersonDto() {

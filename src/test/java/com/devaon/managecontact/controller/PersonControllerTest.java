@@ -3,6 +3,7 @@ package com.devaon.managecontact.controller;
 import com.devaon.managecontact.controller.dto.PersonDto;
 import com.devaon.managecontact.domain.Person;
 import com.devaon.managecontact.domain.dto.Birthday;
+import com.devaon.managecontact.exception.PersonNotFoundException;
 import com.devaon.managecontact.repository.PersonRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,17 +16,20 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@Transactional
 class PersonControllerTest {
     @Autowired
     private PersonRepository personRepository;
@@ -59,7 +63,7 @@ class PersonControllerTest {
 
     @Test
     void postPerson() throws Exception {
-        PersonDto dto = PersonDto.of("martin", "programming", "seoul", LocalDate.now(), "programmer", "010-1111-2222");
+        PersonDto dto = PersonDto.of("martin", "programming", "판교", LocalDate.now(), "programmer", "010-1111-2222");
 
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/person")
@@ -72,7 +76,7 @@ class PersonControllerTest {
         assertAll(
                 () -> assertThat(result.getName()).isEqualTo("martin"),
                 () -> assertThat(result.getHobby()).isEqualTo("programming"),
-                () -> assertThat(result.getAddress()).isEqualTo("seoul"),
+                () -> assertThat(result.getAddress()).isEqualTo("판교"),
                 () -> assertThat(result.getBirthday()).isEqualTo(Birthday.of(LocalDate.now())),
                 () -> assertThat(result.getJob()).isEqualTo("programmer"),
                 () -> assertThat(result.getPhoneNumber()).isEqualTo("010-1111-2222")
@@ -80,8 +84,8 @@ class PersonControllerTest {
     }
 
     @Test
-    void allModifyPerson() throws  Exception{
-        PersonDto dto = PersonDto.of("martin", "programming", "seoul", LocalDate.now(), "programmer", "010-1111-2222");
+    void modifyPerson() throws Exception {
+        PersonDto dto = PersonDto.of("martin", "programming", "판교", LocalDate.now(), "programmer", "010-1111-2222");
 
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/api/person/1")
@@ -94,13 +98,23 @@ class PersonControllerTest {
         assertAll(
                 () -> assertThat(result.getName()).isEqualTo("martin"),
                 () -> assertThat(result.getHobby()).isEqualTo("programming"),
-                () -> assertThat(result.getAddress()).isEqualTo("seoul"),
+                () -> assertThat(result.getAddress()).isEqualTo("판교"),
                 () -> assertThat(result.getBirthday()).isEqualTo(Birthday.of(LocalDate.now())),
                 () -> assertThat(result.getJob()).isEqualTo("programmer"),
-                () -> assertThat(result.getPhoneNumber()).isEqualTo("010-1111-2222")
+                () ->assertThat(result.getPhoneNumber()).isEqualTo("010-1111-2222")
         );
     }
 
+
+    @Test
+    void deletePerson() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/person/1"))
+                .andExpect(status().isOk());
+
+        assertTrue(personRepository.findPeopleDeleted().stream().anyMatch(
+                person -> person.getId().equals(1L)));
+    }
 
     private String toJsonString(PersonDto personDto) throws JsonProcessingException {
         return objectMapper.writeValueAsString(personDto);

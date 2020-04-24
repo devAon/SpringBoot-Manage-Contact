@@ -57,4 +57,13 @@ public class PersonService {
 
         personRepository.save(person);
     }
+
+    @Transactional
+    public void delete(Long id) {
+        Person person = personRepository.findById(id).orElseThrow(PersonNotFoundException::new);
+
+        person.setDeleted(true);
+
+        personRepository.save(person);
+    }
 }
