@@ -7,8 +7,6 @@ import org.mockito.ArgumentMatcher;
 import java.time.LocalDate;
 
 public class IsPersonWillBeInserted implements ArgumentMatcher<Person> {
-
-
     @Override
     public boolean matches(Person person) {
         return equals(person.getName(), "aonee")

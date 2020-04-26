@@ -3,7 +3,6 @@ package com.devaon.managecontact.controller;
 import com.devaon.managecontact.controller.dto.PersonDto;
 import com.devaon.managecontact.domain.Person;
 import com.devaon.managecontact.domain.dto.Birthday;
-import com.devaon.managecontact.exception.PersonNotFoundException;
 import com.devaon.managecontact.repository.PersonRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,7 +52,7 @@ class PersonControllerTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/person/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("martin"))
+                .andExpect(jsonPath("$.name").value("aonee"))
                 .andExpect(jsonPath("$.hobby").isEmpty())
                 .andExpect(jsonPath("$.address").isEmpty())
                 .andExpect(jsonPath("$.job").isEmpty())
@@ -63,7 +62,7 @@ class PersonControllerTest {
 
     @Test
     void postPerson() throws Exception {
-        PersonDto dto = PersonDto.of("martin", "programming", "판교", LocalDate.now(), "programmer", "010-1111-2222");
+        PersonDto dto = PersonDto.of("aonee", "programming", "seoul", LocalDate.now(), "programmer", "010-1111-2222");
 
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/person")
@@ -74,9 +73,9 @@ class PersonControllerTest {
         Person result = personRepository.findAll(Sort.by(Sort.Direction.DESC, "id")).get(0);
 
         assertAll(
-                () -> assertThat(result.getName()).isEqualTo("martin"),
+                () -> assertThat(result.getName()).isEqualTo("aonee"),
                 () -> assertThat(result.getHobby()).isEqualTo("programming"),
-                () -> assertThat(result.getAddress()).isEqualTo("판교"),
+                () -> assertThat(result.getAddress()).isEqualTo("seoul"),
                 () -> assertThat(result.getBirthday()).isEqualTo(Birthday.of(LocalDate.now())),
                 () -> assertThat(result.getJob()).isEqualTo("programmer"),
                 () -> assertThat(result.getPhoneNumber()).isEqualTo("010-1111-2222")
@@ -85,7 +84,7 @@ class PersonControllerTest {
 
     @Test
     void modifyPerson() throws Exception {
-        PersonDto dto = PersonDto.of("martin", "programming", "판교", LocalDate.now(), "programmer", "010-1111-2222");
+        PersonDto dto = PersonDto.of("aonee", "programming", "seoul", LocalDate.now(), "programmer", "010-1111-2222");
 
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/api/person/1")
@@ -96,9 +95,9 @@ class PersonControllerTest {
         Person result = personRepository.findById(1L).get();
 
         assertAll(
-                () -> assertThat(result.getName()).isEqualTo("martin"),
+                () -> assertThat(result.getName()).isEqualTo("aonee"),
                 () -> assertThat(result.getHobby()).isEqualTo("programming"),
-                () -> assertThat(result.getAddress()).isEqualTo("판교"),
+                () -> assertThat(result.getAddress()).isEqualTo("seoul"),
                 () -> assertThat(result.getBirthday()).isEqualTo(Birthday.of(LocalDate.now())),
                 () -> assertThat(result.getJob()).isEqualTo("programmer"),
                 () ->assertThat(result.getPhoneNumber()).isEqualTo("010-1111-2222")
@@ -119,8 +118,5 @@ class PersonControllerTest {
     private String toJsonString(PersonDto personDto) throws JsonProcessingException {
         return objectMapper.writeValueAsString(personDto);
     }
-
-
-
 
 }

@@ -48,5 +48,21 @@ class PersonRepositoryTest {
     }
 
 
+    @Test
+    void findByNameIfDeleted(){
+        List<Person> people = personRepository.findByName("andrew");
+
+        assertThat(people.size()).isEqualTo(0);
+    }
+
+    @Test
+    void findPeopleDeleted(){
+        List<Person> people = personRepository.findPeopleDeleted();
+
+        assertThat(people.size()).isEqualTo(1);
+        assertThat(people.get(0).getName()).isEqualTo("andrew");
+    }
+
+
 
 }
