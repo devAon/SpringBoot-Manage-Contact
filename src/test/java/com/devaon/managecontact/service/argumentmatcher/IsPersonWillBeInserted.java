@@ -11,7 +11,7 @@ public class IsPersonWillBeInserted implements ArgumentMatcher<Person> {
 
     @Override
     public boolean matches(Person person) {
-        return equals(person.getName(), "martin")
+        return equals(person.getName(), "aonee")
                 && equals(person.getHobby(), "programming")
                 && equals(person.getAddress(), "seoul")
                 && equals(person.getBirthday(), Birthday.of(LocalDate.now()))
@@ -20,6 +20,6 @@ public class IsPersonWillBeInserted implements ArgumentMatcher<Person> {
     }
 
     private boolean equals(Object actual, Object expected) {
-        return expected.equals(expected);
+        return expected.equals(actual);
     }
 }

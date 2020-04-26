@@ -51,7 +51,7 @@ class PersonServiceTest {
     @Test
     void modify() {
         when(personRepository.findById(1L))
-                .thenReturn(Optional.of(new Person("martin")));
+                .thenReturn(Optional.of(new Person("aonee")));
 
         personService.modify(1L, mockPersonDto());
 
@@ -88,7 +88,7 @@ class PersonServiceTest {
     }
 
     private PersonDto mockPersonDto() {
-        return PersonDto.of("martin", "programming", "seoul", LocalDate.now(), "programmer", "010-1111-2222");
+        return PersonDto.of("aonee", "programming", "seoul", LocalDate.now(), "programmer", "010-1111-2222");
     }
 
 
