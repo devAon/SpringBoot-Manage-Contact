@@ -820,7 +820,7 @@ public class RenameIsNotPermittedException extends RuntimeException {
 
 ---
 
-### ****✔**TEST 결과 확인 ( 모두 통과 ! 예 ! 에--! 🙋‍♀️ )**
+### ✔ **TEST 결과 확인 ( 모두 통과 ! 예 ! 에--! 🙋‍♀️ )**
 TDD (Test Driven Development 테스트 주도 개발 : 테스트가 개발을 이끌어 나간다 )
 ![](https://k.kakaocdn.net/dn/AVoUk/btqDIopkOVK/GOGuyHL9LpfNUhPWyNhuk1/img.png)
 ![](https://k.kakaocdn.net/dn/dn5fm2/btqDH2mxe8Y/6KmiNvkkNK943tZttfYtkK/img.png)
