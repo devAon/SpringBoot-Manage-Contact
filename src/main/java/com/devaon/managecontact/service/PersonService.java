@@ -7,9 +7,12 @@ import com.devaon.managecontact.exception.RenameIsNotPermittedException;
 import com.devaon.managecontact.repository.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 
 
 @Slf4j
@@ -19,6 +22,14 @@ public class PersonService {
     @Autowired
     private PersonRepository personRepository;
 
+    @Transactional
+    public Page<Person> getAll(Pageable pageable) {
+        return personRepository.findAll(pageable);
+    }
+
+    public List<Person> getPeopleByName(String name) {
+        return personRepository.findByName(name);
+    }
 
     @Transactional(readOnly = true)
     public Person getPerson(Long id) {
