@@ -90,7 +90,4 @@ class PersonServiceTest {
     private PersonDto mockPersonDto() {
         return PersonDto.of("aonee", "programming", "seoul", LocalDate.now(), "programmer", "010-1111-2222");
     }
-
-
-
 }

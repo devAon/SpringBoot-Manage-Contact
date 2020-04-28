@@ -83,6 +83,51 @@ class PersonControllerTest {
     }
 
     @Test
+    void postPersonIfNameIsNull() throws Exception {
+        PersonDto dto = new PersonDto();
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/person")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(toJsonString(dto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.message").value("이름은 필수값입니다"));
+    }
+
+    @Test
+    void postPersonIfNameIsEmptyString() throws Exception {
+        PersonDto dto = new PersonDto();
+        dto.setName("");
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/person")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(toJsonString(dto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.message").value("이름은 필수값입니다"));
+    }
+
+    @Test
+    void postPersonIfNameIsBlankString() throws Exception {
+        PersonDto dto = new PersonDto();
+        dto.setName(" ");
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/person")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(toJsonString(dto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.message").value("이름은 필수값입니다"));
+    }
+
+
+
+
+
+    @Test
     void modifyPerson() throws Exception {
         PersonDto dto = PersonDto.of("aonee", "programming", "seoul", LocalDate.now(), "programmer", "010-1111-2222");
 
