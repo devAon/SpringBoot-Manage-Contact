@@ -149,6 +149,34 @@ class PersonControllerTest {
         );
     }
 
+    @Test
+    void modifyPersonIfNameIsDifferent() throws Exception{
+        PersonDto personDto = PersonDto.of("jenney", "programming", "seoul", LocalDate.now(), "programmer", "010-1111-2222");
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/api/person/1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(toJsonString(personDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.message").value("이름 변경이 허용되지 않습니다"));
+    }
+
+
+    @Test
+    void modifyPersonIfPersonNotFound() throws Exception {
+        PersonDto personDto = PersonDto.of("aonee", "programming", "seoul", LocalDate.now(), "programmer", "010-1111-2222");
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/api/person/10")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(toJsonString(personDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.message").value("Person Entity가 존재하지 않습니다"));
+
+    }
+
 
     @Test
     void deletePerson() throws Exception {
