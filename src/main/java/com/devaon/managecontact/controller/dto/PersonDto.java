@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
 public class PersonDto {
-    @NotBlank(message = "name is essential value")
+    @NotBlank(message = "이름은 필수값입니다")
     private String name;
 
     private String hobby;
